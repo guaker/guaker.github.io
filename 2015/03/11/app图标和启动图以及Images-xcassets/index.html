@@ -1,0 +1,670 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="概述项目是纯代码编写，到现在一直没有适配iPhone6和iPhone6 plus，今天做了一些准备工作，app图标和启动图片的适配。项目当时是Xcode5创建的，并设置了app图标和启动图片（iPhone4到iPhone5s的图片）。后来升级到Xcode6，因为没有适配iPhone6，app图标和启动图片也一直没改动。 App Icons and Launch Images选择General找到A">
+<meta property="og:type" content="article">
+<meta property="og:title" content="app图标和启动图以及Images-xcassets">
+<meta property="og:url" content="http://guaker.github.io/2015/03/11/app%E5%9B%BE%E6%A0%87%E5%92%8C%E5%90%AF%E5%8A%A8%E5%9B%BE%E4%BB%A5%E5%8F%8AImages-xcassets/index.html">
+<meta property="og:site_name" content="guaker&#39;s blog">
+<meta property="og:description" content="概述项目是纯代码编写，到现在一直没有适配iPhone6和iPhone6 plus，今天做了一些准备工作，app图标和启动图片的适配。项目当时是Xcode5创建的，并设置了app图标和启动图片（iPhone4到iPhone5s的图片）。后来升级到Xcode6，因为没有适配iPhone6，app图标和启动图片也一直没改动。 App Icons and Launch Images选择General找到A">
+<meta property="og:image" content="http://of2ltm20e.bkt.clouddn.com/262538-bc43b8adc30295f0.jpeg">
+<meta property="og:image" content="http://of2ltm20e.bkt.clouddn.com/262538-100103b6a3230b5b.jpeg">
+<meta property="og:image" content="http://of2ltm20e.bkt.clouddn.com/262538-945e9acd776208d3.jpeg">
+<meta property="og:image" content="http://of2ltm20e.bkt.clouddn.com/262538-d3d76c481abb6dbe.jpeg">
+<meta property="og:image" content="http://of2ltm20e.bkt.clouddn.com/262538-5015981124b0beba.png">
+<meta property="og:image" content="http://of2ltm20e.bkt.clouddn.com/262538-5e932a5fc7b28df4.jpeg">
+<meta property="og:image" content="http://of2ltm20e.bkt.clouddn.com/262538-e999e41b505001c4.png">
+<meta property="og:image" content="http://of2ltm20e.bkt.clouddn.com/262538-0a504b95c5c36c01.jpeg">
+<meta property="og:image" content="http://of2ltm20e.bkt.clouddn.com/262538-a84f9bece1aa8b37.jpeg">
+<meta property="og:image" content="http://of2ltm20e.bkt.clouddn.com/262538-1c360c87081e4062.png">
+<meta property="og:image" content="http://of2ltm20e.bkt.clouddn.com/262538-187dda68ddf0c8c5.png">
+<meta property="og:image" content="http://of2ltm20e.bkt.clouddn.com/262538-f8239573ac9434f1.png">
+<meta property="og:image" content="http://of2ltm20e.bkt.clouddn.com/262538-1e980854ca8595c4.png">
+<meta property="og:image" content="http://of2ltm20e.bkt.clouddn.com/262538-154c259e70395cea.jpeg">
+<meta property="article:published_time" content="2015-03-10T16:00:00.000Z">
+<meta property="article:modified_time" content="2016-10-16T11:52:52.000Z">
+<meta property="article:author" content="guaker">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://of2ltm20e.bkt.clouddn.com/262538-bc43b8adc30295f0.jpeg">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://guaker.github.io/2015/03/11/app图标和启动图以及Images-xcassets/"/>
+
+
+  <title> app图标和启动图以及Images-xcassets | guaker's blog </title>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">guaker's blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Write the code.Change the world.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                app图标和启动图以及Images-xcassets
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-03-11T00:00:00+08:00" content="2015-03-11">
+              2015-03-11
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/03/11/app%E5%9B%BE%E6%A0%87%E5%92%8C%E5%90%AF%E5%8A%A8%E5%9B%BE%E4%BB%A5%E5%8F%8AImages-xcassets/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/03/11/app图标和启动图以及Images-xcassets/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>项目是纯代码编写，到现在一直没有适配iPhone6和iPhone6 plus，今天做了一些准备工作，app图标和启动图片的适配。<br>项目当时是Xcode5创建的，并设置了app图标和启动图片（iPhone4到iPhone5s的图片）。<br>后来升级到Xcode6，因为没有适配iPhone6，app图标和启动图片也一直没改动。</p>
+<h3 id="App-Icons-and-Launch-Images"><a href="#App-Icons-and-Launch-Images" class="headerlink" title="App Icons and Launch Images"></a>App Icons and Launch Images</h3><p>选择<code>General</code>找到<code>App Icons and Launch Images</code><br><img src="http://of2ltm20e.bkt.clouddn.com/262538-bc43b8adc30295f0.jpeg" alt="General"></p>
+<p>Xcode5也是在这个地方设置的，有点区别。点击<code>Use Asset Catalog</code><br><img src="http://of2ltm20e.bkt.clouddn.com/262538-100103b6a3230b5b.jpeg" alt="App Icons and Launch Images"><br>选择<code>Migrate</code><br>￼<img src="http://of2ltm20e.bkt.clouddn.com/262538-945e9acd776208d3.jpeg" alt="Migrate"><br>点击右侧箭头<br><img src="http://of2ltm20e.bkt.clouddn.com/262538-d3d76c481abb6dbe.jpeg" alt="App Icons and Launch Images"></p>
+<h3 id="AppIcon"><a href="#AppIcon" class="headerlink" title="AppIcon"></a>AppIcon</h3><p>删掉无效的<code>Images.xcassets</code><br><img src="http://of2ltm20e.bkt.clouddn.com/262538-5015981124b0beba.png" alt="AppIcon"><br>点一下左侧的信息，勾选<code>iOS 8.0 and Later Sizes</code>。<br><img src="http://of2ltm20e.bkt.clouddn.com/262538-5e932a5fc7b28df4.jpeg" alt="AppIcon"><br><code>AppIcon</code>就出来<code>@3x</code>图标了，把相应尺寸（<code>180x180</code>）的图标拖进去即可。<br>￼<img src="http://of2ltm20e.bkt.clouddn.com/262538-e999e41b505001c4.png" alt="AppIcon"></p>
+<h3 id="LaunchImage"><a href="#LaunchImage" class="headerlink" title="LaunchImage"></a>LaunchImage</h3><p>￼<img src="http://of2ltm20e.bkt.clouddn.com/262538-0a504b95c5c36c01.jpeg" alt="LaunchImage"><br>勾选<code>iOS 8.0 and Later</code>，把对应尺寸（iPhone6<code>750x1334</code>，iPhone6 plus<code>1242x2208</code>）的启动图片拖进去即可。<br><img src="http://of2ltm20e.bkt.clouddn.com/262538-a84f9bece1aa8b37.jpeg" alt="LaunchImage"><br>也可以修改<code>Images.xcassets</code>文件夹中<code>LaunchImage.launchimage</code>的<code>Contents.json</code>文件<br><img src="http://of2ltm20e.bkt.clouddn.com/262538-1c360c87081e4062.png" alt="Contents.json"><br>现在启动图设置好了，运行项目在iPhone6上会发现：</p>
+<ol>
+<li>设置启动图之前，状态栏文字颜色是黑色的，UI在iPhone6是放大的。</li>
+<li>设置启动图之后，状态栏文字颜色变成白色（设置的颜色），UI右侧有部分空白（这时就需要适配UI了）。</li>
+</ol>
+<h3 id="Launch-Screen"><a href="#Launch-Screen" class="headerlink" title="Launch Screen"></a>Launch Screen</h3><p>Xcode6和iOS8也可以在<code>Launch Screen File</code>设置<code>LaunchScreen.xib</code>文件为iPhone6和iPhone6 plus以及iOS8系统设备的启动页。iOS8会走这个设置，iOS7以及之前的直接忽略，这个<code>xib</code>文件不能关联代码。<br>Xcode5创建的项目在Xcode6上面选择<code>New File</code>创建<br><img src="http://of2ltm20e.bkt.clouddn.com/262538-187dda68ddf0c8c5.png" alt="Launch Screen"></p>
+<h3 id="资源图片放到Images-xcassets"><a href="#资源图片放到Images-xcassets" class="headerlink" title="资源图片放到Images.xcassets"></a>资源图片放到Images.xcassets</h3><p>右键选择<code>New Image Set</code>。<br><img src="http://of2ltm20e.bkt.clouddn.com/262538-f8239573ac9434f1.png" alt="Image Set"><br>把<code>@1x</code>，<code>@2x</code>，<code>@3x</code>图片拖进去即可<br>￼<img src="http://of2ltm20e.bkt.clouddn.com/262538-1e980854ca8595c4.png" alt="Image Set"><br>选择<code>Type</code>，有位图和矢量图，选择矢量图，让美工切一个<code>@1x</code>的<code>PDF</code>格式的矢量图拖进去，运行的时候会自动生成<code>@1x</code>，<code>@2x</code>，<code>@3x</code>的图片。<br>￼<img src="http://of2ltm20e.bkt.clouddn.com/262538-154c259e70395cea.jpeg" alt="Image Set"></p>
+<h3 id="参考文章："><a href="#参考文章：" class="headerlink" title="参考文章："></a>参考文章：</h3><ol>
+<li><a href="http://www.cnblogs.com/liufan9/p/3136064.html" target="_blank" rel="noopener">iOS7初体验(3)——图像资源Images Assets</a></li>
+<li><a href="http://www.cocoachina.com/bbs/read.php?tid=229352&page=1" target="_blank" rel="noopener">适配iOS 8备忘录 开始启动（持续更新。。。1130）</a></li>
+<li><a href="http://blog.csdn.net/cuibo1123/article/details/39486197/" target="_blank" rel="noopener">在xcode6中使用矢量图(iPhone6置配UI)</a></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/03/01/iOS%E5%8A%A0%E6%80%A5%E5%AE%A1%E6%A0%B8/" rel="next" title="iOS加急审核">
+                <i class="fa fa-chevron-left"></i> iOS加急审核
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/04/04/AutoLayout(NSLayoutConstraint)/" rel="prev" title="AutoLayout(NSLayoutConstraint)">
+                AutoLayout(NSLayoutConstraint) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2015/03/11/app图标和启动图以及Images-xcassets/"
+           data-title="app图标和启动图以及Images-xcassets" data-url="http://guaker.github.io/2015/03/11/app%E5%9B%BE%E6%A0%87%E5%92%8C%E5%90%AF%E5%8A%A8%E5%9B%BE%E4%BB%A5%E5%8F%8AImages-xcassets/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://of2ltm20e.bkt.clouddn.com/avatar.jpg"
+               alt="guaker" />
+          <p class="site-author-name" itemprop="name">guaker</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#App-Icons-and-Launch-Images"><span class="nav-number">2.</span> <span class="nav-text">App Icons and Launch Images</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AppIcon"><span class="nav-number">3.</span> <span class="nav-text">AppIcon</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LaunchImage"><span class="nav-number">4.</span> <span class="nav-text">LaunchImage</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Launch-Screen"><span class="nav-number">5.</span> <span class="nav-text">Launch Screen</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#资源图片放到Images-xcassets"><span class="nav-number">6.</span> <span class="nav-text">资源图片放到Images.xcassets</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文章："><span class="nav-number">7.</span> <span class="nav-text">参考文章：</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">guaker</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="noopener">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"guaker"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

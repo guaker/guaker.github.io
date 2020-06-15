@@ -1,0 +1,665 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="概述公司给我接了一个项目，让我帮忙做几个功能。同时接过来的还有个企业账号，于是我和公司申请能不能用这个企业账号测试我们自己的项目，然后就开始各种折腾。 开发者账号简单的说明一下开发者账号和证书，详细教程网上很多。开发者账号有两种，标准账号$99和企业账号$299。  个人账号和公司账号都属于标准账号，可以发布App Store，但是每年只能使用100台测试设备，需要添加设备的UDID。 企业账号不">
+<meta property="og:type" content="article">
+<meta property="og:title" content="开发者账号和.ipa文件重新签名">
+<meta property="og:url" content="http://guaker.github.io/2015/02/11/%E5%BC%80%E5%8F%91%E8%80%85%E8%B4%A6%E5%8F%B7%E5%92%8C.ipa%E6%96%87%E4%BB%B6%E9%87%8D%E6%96%B0%E7%AD%BE%E5%90%8D/index.html">
+<meta property="og:site_name" content="guaker&#39;s blog">
+<meta property="og:description" content="概述公司给我接了一个项目，让我帮忙做几个功能。同时接过来的还有个企业账号，于是我和公司申请能不能用这个企业账号测试我们自己的项目，然后就开始各种折腾。 开发者账号简单的说明一下开发者账号和证书，详细教程网上很多。开发者账号有两种，标准账号$99和企业账号$299。  个人账号和公司账号都属于标准账号，可以发布App Store，但是每年只能使用100台测试设备，需要添加设备的UDID。 企业账号不">
+<meta property="og:image" content="http://of2ltm20e.bkt.clouddn.com/262538-5043ba31534816a5.png">
+<meta property="og:image" content="http://of2ltm20e.bkt.clouddn.com/262538-547b456ad11b091a.jpeg">
+<meta property="og:image" content="http://of2ltm20e.bkt.clouddn.com/262538-f9c0c023fc8f1050.jpeg">
+<meta property="og:image" content="http://of2ltm20e.bkt.clouddn.com/262538-e146ac8f044e5da4.jpeg">
+<meta property="og:image" content="http://of2ltm20e.bkt.clouddn.com/262538-2864284f6de49f93.jpeg">
+<meta property="og:image" content="http://of2ltm20e.bkt.clouddn.com/262538-68ba48d1b0899eaf.png">
+<meta property="og:image" content="http://of2ltm20e.bkt.clouddn.com/262538-8af3cd17f4b032cf.jpeg">
+<meta property="article:published_time" content="2015-02-10T16:00:00.000Z">
+<meta property="article:modified_time" content="2016-10-16T11:52:06.000Z">
+<meta property="article:author" content="guaker">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://of2ltm20e.bkt.clouddn.com/262538-5043ba31534816a5.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://guaker.github.io/2015/02/11/开发者账号和.ipa文件重新签名/"/>
+
+
+  <title> 开发者账号和.ipa文件重新签名 | guaker's blog </title>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">guaker's blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Write the code.Change the world.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                开发者账号和.ipa文件重新签名
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-02-11T00:00:00+08:00" content="2015-02-11">
+              2015-02-11
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/%E5%BC%80%E5%8F%91%E8%80%85%E8%B4%A6%E5%8F%B7/" itemprop="url" rel="index">
+                    <span itemprop="name">开发者账号</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/02/11/%E5%BC%80%E5%8F%91%E8%80%85%E8%B4%A6%E5%8F%B7%E5%92%8C.ipa%E6%96%87%E4%BB%B6%E9%87%8D%E6%96%B0%E7%AD%BE%E5%90%8D/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/02/11/开发者账号和.ipa文件重新签名/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><p>公司给我接了一个项目，让我帮忙做几个功能。同时接过来的还有个企业账号，于是我和公司申请能不能用这个企业账号测试我们自己的项目，然后就开始各种折腾。</p>
+<h4 id="开发者账号"><a href="#开发者账号" class="headerlink" title="开发者账号"></a>开发者账号</h4><p>简单的说明一下开发者账号和证书，详细教程网上很多。<br>开发者账号有两种，标准账号$99和企业账号$299。</p>
+<ol>
+<li>个人账号和公司账号都属于标准账号，可以发布App Store，但是每年只能使用100台测试设备，需要添加设备的<code>UDID</code>。</li>
+<li>企业账号不能发布App Store，只能供企业内部使用，但是安装的设备没有限制。</li>
+</ol>
+<p>标准账号和企业账号的后台是一样的<br><img src="http://of2ltm20e.bkt.clouddn.com/262538-5043ba31534816a5.png" alt="Certificates, Identifiers &amp; Profiles"></p>
+<ol>
+<li><code>Certificates</code>是证书，包括测试证书和发布证书，推送的测试证书和发布证书也在这里。</li>
+<li><code>Identfiers</code>是标识符，和<code>Bundle ID</code>是一致的。一般用到的是<code>App IDs</code>，包括唯一<code>App ID</code>和通配符，唯一<code>App ID</code>不能重复，通配符不能使用推送服务。其他的<code>Identfiers</code>这里不做介绍。</li>
+<li><code>Devices</code>是设备，添加的设备的<code>UDID</code>。</li>
+<li><code>Provisioning Profiles</code>是配置文件，将<code>Certificates</code>和<code>Identfiers</code>以及<code>Devices</code>关联上给Xcode使用。</li>
+</ol>
+<p>测试或者发布必须要有<code>Certificates</code>和<code>Provisioning Profiles</code>。</p>
+<h4 id="标准账号和企业账号的区别"><a href="#标准账号和企业账号的区别" class="headerlink" title="标准账号和企业账号的区别"></a>标准账号和企业账号的区别</h4><p>标准账号和企业账号类似，在<code>Certificates</code>和<code>Provisioning Profiles</code>会有区别。<br><img src="http://of2ltm20e.bkt.clouddn.com/262538-547b456ad11b091a.jpeg" alt="标准账号 - Certificates"><br><img src="http://of2ltm20e.bkt.clouddn.com/262538-f9c0c023fc8f1050.jpeg" alt="标准账号 - Provisioning Profiles"><br><img src="http://of2ltm20e.bkt.clouddn.com/262538-e146ac8f044e5da4.jpeg" alt="企业账号 - Certificates"><br><img src="http://of2ltm20e.bkt.clouddn.com/262538-2864284f6de49f93.jpeg" alt="企业账号 - Provisioning Profiles"><br>标准账号可以选择<code>App Store</code>以及<code>Ad Hoc</code>，<code>App Store</code>就是发布正式版到App Store，<code>Ad Hoc</code>是发布测试版（有100台设备限制）。这里介绍一篇FIR.im的文章<a href="http://blog.fir.im/2014/how-to-build-adhoc-ipa/" target="_blank" rel="noopener">如何制作一个可以上传到FIR.im的ipa文件-Ad-Hoc篇</a><br>企业账号可以选择<code>In House</code>和<code>Ad Hoc</code>，<code>in House</code>就是内部使用。</p>
+<h4 id="企业证书发布"><a href="#企业证书发布" class="headerlink" title="企业证书发布"></a>企业证书发布</h4><p><code>Archive</code>之后选择<code>Export</code>，然后选择<code>Save for Enterprise Deployment</code>。<br><img src="http://of2ltm20e.bkt.clouddn.com/262538-68ba48d1b0899eaf.png" alt="Export"><br>以前企业证书打包会生成两个文件，一个<code>.ipa</code>文件和一个<code>.plist</code>文件，然后创建个服务器端<code>html</code>文件放到服务器上。<br>现在打包则不生成<code>.plist</code>文件，按照以前的做法则需要手动添加一个<code>.plist</code>文件。<br>我是直接上传到FIR.im上的，扫描二维码下载安装。</p>
+<h4 id="iReSign重新签名-ipa文件"><a href="#iReSign重新签名-ipa文件" class="headerlink" title="iReSign重新签名.ipa文件"></a>iReSign重新签名.ipa文件</h4><p>因为项目做了一个定位商圈功能，商圈是按照区域划分的（北京就有20多个商圈），需要定位判断是否在某个商圈里，公司也是遍布全国，这样测试就有很大的问题。<br>之前测试用的是蒲公英的企业发布，扫二维码直接下载安装，特别好用，但是苹果是不允许企业证书这样使用的，所以经常出问题。<br>后来就转用FIR.im，发布到FIR.im可以测试100台设备，测试人员将手机<code>UDID</code>发给我，我添加到公司账号下，测试人员扫二维码就可以下载安装，也是方便了很多。<br>昨天接过来一个企业账号，我就想用企业账号测试不是方便很多？<br>于是先折腾证书到我电脑里，然后用的通配符打包上传FIR.im，但是无法安装。然后我就创建了一个唯一<code>App ID</code>，这时候问题出现了，不能创建相同的<code>App ID</code>，只能创建不同的<code>App ID</code>了，配置文件弄好之后，修改项目的<code>Bundle Id</code>打包上传FIR.im测试果然好使了。<br>但是还有问题，<code>Bundle Id</code>修改了，腾讯平台、微博平台、友盟以及推送都是之前的<code>Bundle Id</code>申请的，虽然对测试影响不大，但是我的强迫症使我不能接受这么复杂的测试方式（修改<code>Bundle Id</code>，更换证书，更换测试的第三方<code>key</code>等等）。<br>突然想到是不是可以对生成的<code>.ipa</code>文件重新签名打包，蒲公英之前就是这样的，于是各种查资料，试了不少方法。<br>查资料过程中发现了iReSign这个软件。<br><img src="http://of2ltm20e.bkt.clouddn.com/262538-8af3cd17f4b032cf.jpeg" alt="iReSign"><br>其他四个都知道怎么整，第三个<code>entitlements.plist</code>的路径，这个不知道是干啥的，百度有说明但只找到了一句命令行的代码，完全看不懂，但是工作还是要继续做下去的，我就试了下不添加这个路径直接重新签名，成功！iReSign会自动生成了一个<code>entitlements.plist</code>文件。最后上传FIR.im给朋友测试，可以打开，分享和定位没有问题，推送还没测试。<br>最后算是完美解决问题，不过还是想知道蒲公英重新签名是如何实现的。</p>
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p>今天找群里大神确认了下，需要注意的是在iOS8.1.3下重新签名安装必须要卸载原版app才可以安装成功，不然会出问题的，切记切记！</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/01/25/iOS%E9%9A%90%E8%97%8FtabBar/" rel="next" title="iOS隐藏tabBar">
+                <i class="fa fa-chevron-left"></i> iOS隐藏tabBar
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/03/01/iOS%E5%8A%A0%E6%80%A5%E5%AE%A1%E6%A0%B8/" rel="prev" title="iOS加急审核">
+                iOS加急审核 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2015/02/11/开发者账号和.ipa文件重新签名/"
+           data-title="开发者账号和.ipa文件重新签名" data-url="http://guaker.github.io/2015/02/11/%E5%BC%80%E5%8F%91%E8%80%85%E8%B4%A6%E5%8F%B7%E5%92%8C.ipa%E6%96%87%E4%BB%B6%E9%87%8D%E6%96%B0%E7%AD%BE%E5%90%8D/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://of2ltm20e.bkt.clouddn.com/avatar.jpg"
+               alt="guaker" />
+          <p class="site-author-name" itemprop="name">guaker</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#开发者账号"><span class="nav-number">2.</span> <span class="nav-text">开发者账号</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#标准账号和企业账号的区别"><span class="nav-number">3.</span> <span class="nav-text">标准账号和企业账号的区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#企业证书发布"><span class="nav-number">4.</span> <span class="nav-text">企业证书发布</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#iReSign重新签名-ipa文件"><span class="nav-number">5.</span> <span class="nav-text">iReSign重新签名.ipa文件</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注意"><span class="nav-number"></span> <span class="nav-text">注意</span></a></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">guaker</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="noopener">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"guaker"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

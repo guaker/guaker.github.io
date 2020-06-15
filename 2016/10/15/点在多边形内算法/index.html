@@ -1,0 +1,684 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="概述最近在找工作，有个面试聊到了我第二家公司产品一个功能，定位某台设备是否在某个商圈内，简化后就是判断一个点是否在某个不规则多边形内。翻了下当时收藏的书签发现打不开了，今天又突然可以打开，还是备份下比较好。 原文原文章地址：点在多边形内算法——判断一个点是否在一个复杂多边形的内部 新页面（new page）介绍了将样条曲线添加到此技术的内容。也可以访问多边形内最短路径页（shortest-path">
+<meta property="og:type" content="article">
+<meta property="og:title" content="点在多边形内算法">
+<meta property="og:url" content="http://guaker.github.io/2016/10/15/%E7%82%B9%E5%9C%A8%E5%A4%9A%E8%BE%B9%E5%BD%A2%E5%86%85%E7%AE%97%E6%B3%95/index.html">
+<meta property="og:site_name" content="guaker&#39;s blog">
+<meta property="og:description" content="概述最近在找工作，有个面试聊到了我第二家公司产品一个功能，定位某台设备是否在某个商圈内，简化后就是判断一个点是否在某个不规则多边形内。翻了下当时收藏的书签发现打不开了，今天又突然可以打开，还是备份下比较好。 原文原文章地址：点在多边形内算法——判断一个点是否在一个复杂多边形的内部 新页面（new page）介绍了将样条曲线添加到此技术的内容。也可以访问多边形内最短路径页（shortest-path">
+<meta property="og:image" content="http://of2ltm20e.bkt.clouddn.com/pointInThePolygon01.png">
+<meta property="og:image" content="http://of2ltm20e.bkt.clouddn.com/pointInThePolygon02.png">
+<meta property="og:image" content="http://of2ltm20e.bkt.clouddn.com/pointInThePolygon03.png">
+<meta property="og:image" content="http://of2ltm20e.bkt.clouddn.com/pointInThePolygon04.png">
+<meta property="og:image" content="http://of2ltm20e.bkt.clouddn.com/pointInThePolygon05.png">
+<meta property="og:image" content="http://of2ltm20e.bkt.clouddn.com/pointInThePolygon06.png">
+<meta property="og:image" content="http://of2ltm20e.bkt.clouddn.com/pointInThePolygon07.png">
+<meta property="article:published_time" content="2016-10-15T12:20:39.000Z">
+<meta property="article:modified_time" content="2016-11-04T11:22:13.000Z">
+<meta property="article:author" content="guaker">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://of2ltm20e.bkt.clouddn.com/pointInThePolygon01.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://guaker.github.io/2016/10/15/点在多边形内算法/"/>
+
+
+  <title> 点在多边形内算法 | guaker's blog </title>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">guaker's blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Write the code.Change the world.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                点在多边形内算法
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-10-15T20:20:39+08:00" content="2016-10-15">
+              2016-10-15
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/10/15/%E7%82%B9%E5%9C%A8%E5%A4%9A%E8%BE%B9%E5%BD%A2%E5%86%85%E7%AE%97%E6%B3%95/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/15/点在多边形内算法/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>最近在找工作，有个面试聊到了我第二家公司产品一个功能，定位某台设备是否在某个商圈内，简化后就是判断一个点是否在某个不规则多边形内。翻了下当时收藏的书签发现打不开了，今天又突然可以打开，还是备份下比较好。</p>
+<h3 id="原文"><a href="#原文" class="headerlink" title="原文"></a>原文</h3><p>原文章地址：<a href="http://blog.csdn.net/hjh2005/article/details/9246967" target="_blank" rel="noopener">点在多边形内算法——判断一个点是否在一个复杂多边形的内部</a></p>
+<p>新页面（<a href="http://alienryderflex.com/polyspline/" target="_blank" rel="noopener">new page</a>）介绍了将样条曲线添加到此技术的内容。也可以访问多边形内最短路径页（<a href="http://alienryderflex.com/shortest_path/" target="_blank" rel="noopener">shortest-path-through-polygonpage</a>）！</p>
+<p><img src="http://of2ltm20e.bkt.clouddn.com/pointInThePolygon01.png" alt="图1"></p>
+<p>图1显示了一个具有<code>14</code>条边的凹多边形。我们要判断红色点是否在多边形内。</p>
+<p>解决方案是将测试点的<code>Y</code>坐标与多边形的每一个点进行比较，我们会得到一个测试点所在的行与多边形边的交点的列表。在这个例子中有<code>8</code>条边与测试点所在的行相交，而有<code>6</code>条边没有相交。如果测试点的两边点的个数都是奇数个则该测试点在多边形内，否则在多边形外。在这个例子中测试点的左边有<code>5</code>个交点，右边有<code>3</code>个交点，它们都是奇数，所以点在多边形内。</p>
+<p>（注意：这个<code>算法</code>适用于顺时针和逆时针绘制的多边形。）</p>
+<p><img src="http://of2ltm20e.bkt.clouddn.com/pointInThePolygon02.png" alt="图2"></p>
+<p>图2显示了多边形自交的情况。在这个例子中多边形的<code>10</code>条边有些互相交叉。这种情况很像汇编语言中的“异或”（XOR）。多边形中重叠的部分剔除。因此测试点在多边形的外面，我们从它的左右两边各有两个交点也可以看出来。</p>
+<p><img src="http://of2ltm20e.bkt.clouddn.com/pointInThePolygon03.png" alt="图3"></p>
+<p>图3中多边形没有重叠，但是有两条边相交。这种情况下算法也没有问题，任然可以正常工作。</p>
+<p><img src="http://of2ltm20e.bkt.clouddn.com/pointInThePolygon04.png" alt="图4"></p>
+<p>图4显示了当我们要测试的点所在的扫描行正好穿过多边形的一个顶点，因此扫描行与边a有一个交点，与边b也有一个交点，一共有两个角点，测试点的右边也是同样的情况，那按照我们的算法得到：测试点在多边形外的结论，但这显然是错误的！</p>
+<p>要解决这种情况遇到的问题非常简单。边上的点是否与扫描行相交，我们要看边的两个端点是否是在扫描行的两侧，在扫描行上或上方的端点我们把它认为是同一种情况，那图4中边a的一个端点在扫描线的下方，另一个点在扫描线上或上方，所以边a与扫描线相交，而边b的两个端点都在扫描线上或上方，所以边b与扫描线不相交。</p>
+<p><img src="http://of2ltm20e.bkt.clouddn.com/pointInThePolygon05.png" alt="图5"></p>
+<p>图5显示的多边形上一条边完全与扫描行重合的情况。根据图4中具体描述的边c的一个端点在扫描线的下方另一个端点在扫描线上或上方，所以边c与扫描线有一个交点，而边d的两个端点都在扫描线上或以上，所以无交点，边e也是两个端点都在扫描线上或以上，所以也没交点。</p>
+<p><img src="http://of2ltm20e.bkt.clouddn.com/pointInThePolygon06.png" alt="图6"></p>
+<p>图6说明了一种特殊的情况（由加州州立理工大学的John David Munch指出）。多边形的一个角刚好落在扫描线上。其实这也没问题，上面的图中只有红色的边与扫描线相交产生交点，所以第一张图有<code>1</code>个交点第二张图有<code>3</code>个交点，交点的个数任然是奇数个，所以测试点在多边形内部。</p>
+<p>多边形的边</p>
+<p>如果测试点刚好在多边形的边上，则这种算法得到的结果是不确定的；例如结果可能是“在里面”或“不在里面”，这取决于很多不定的因素例如多边形在坐标系统中的方向。（不过这也没啥影响，因为多边形的边是无限小的，and points that fall right on the edge can Go either way withouthurting the look of the polygon）</p>
+<p>C代码例子</p>
+<figure class="highlight gml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Globals which should be set before calling this function:</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// int   polySides = how many cornersthe polygon has</span></span><br><span class="line"><span class="comment">// float polyX[]   = horizontalcoordinates of corners</span></span><br><span class="line"><span class="comment">// float polyY[]   = verticalcoordinates of corners</span></span><br><span class="line"><span class="comment">// float x,y       = point to be tested</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// (Globals are used in this example for purposes of speed. Change as</span></span><br><span class="line"><span class="comment">// desired.)</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Thefunction will return YES if the point x,y is inside the polygon, or</span></span><br><span class="line"><span class="comment">// NOif it is not.  If the point is exactly on the edge of the polygon,</span></span><br><span class="line"><span class="comment">// then the function may return YES or NO.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Note that division by zero is avoided because the division is protected</span></span><br><span class="line"><span class="comment">// bythe "if" clause which surrounds it.</span></span><br><span class="line"></span><br><span class="line">bool pointInPolygon() &#123;</span><br><span class="line"></span><br><span class="line">    int i, j=polySides<span class="number">-1</span>;</span><br><span class="line">    bool oddNodes=NO;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (i=<span class="number">0</span>; i&lt;polySides; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (polyY[i]&lt;<span class="symbol">y</span> &amp;&amp; polyY[j]&gt;=<span class="symbol">y</span></span><br><span class="line">            ||polyY[j]&lt;<span class="symbol">y</span> &amp;&amp; polyY[i]&gt;=<span class="symbol">y</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (polyX[i]+(<span class="symbol">y</span>-polyY[i])/(polyY[j]-polyY[i])*(polyX[j]-polyX[i])&lt;<span class="symbol">x</span>) &#123;</span><br><span class="line">                oddNodes=!oddNodes;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        j=i;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    returnoddNodes;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>下面是由Nathan Mercer提供的效力比较的的版本，蓝色的代码eliminatescalculations on sides that are entirely to the right of the test point.。虽然对某些多边形来说可能不是最快的方法，但是大多数情况下是最快的。</p>
+<figure class="highlight gml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Globals which should be set before calling this function:</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// int   polySides = how many cornersthe polygon has</span></span><br><span class="line"><span class="comment">// float polyX[]   = horizontalcoordinates of corners</span></span><br><span class="line"><span class="comment">// float polyY[]   = verticalcoordinates of corners</span></span><br><span class="line"><span class="comment">// float x,y       = point to be tested</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// (Globals are used in this example for purposes of speed. Change as</span></span><br><span class="line"><span class="comment">// desired.)</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Thefunction will return YES if the point x,y is inside the polygon, or</span></span><br><span class="line"><span class="comment">// NOif it is not.  If the point is exactly on the edge of the polygon,</span></span><br><span class="line"><span class="comment">// then the function may return YES or NO.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Note that division by zero is avoided because the division is protected</span></span><br><span class="line"><span class="comment">// bythe "if" clause which surrounds it.</span></span><br><span class="line"></span><br><span class="line">bool pointInPolygon() &#123;</span><br><span class="line"></span><br><span class="line">    int i, j=polySides<span class="number">-1</span>;</span><br><span class="line">    bool oddNodes=NO;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (i=<span class="number">0</span>; i&lt;polySides; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> ((polyY[i]&lt; <span class="symbol">y</span> &amp;&amp; polyY[j]&gt;=<span class="symbol">y</span></span><br><span class="line">             || polyY[j]&lt;<span class="symbol">y</span> &amp;&amp; polyY[i]&gt;=<span class="symbol">y</span>)</span><br><span class="line">            &amp;&amp; (polyX[i]&lt;=<span class="symbol">x</span> || polyX[j]&lt;=<span class="symbol">x</span>)) &#123;</span><br><span class="line">            <span class="keyword">if</span> (polyX[i]+(<span class="symbol">y</span>-polyY[i])/(polyY[j]-polyY[i])*(polyX[j]-polyX[i])&lt;<span class="symbol">x</span>) &#123;</span><br><span class="line">                oddNodes=!oddNodes;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        j=i;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    returnoddNodes;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里是由提供了另一个高效的版本。内部的<code>if</code>语句消除或替代了异或操作。</p>
+<figure class="highlight gml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Globals which should be set before calling this function:</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// int   polySides = how many cornersthe polygon has</span></span><br><span class="line"><span class="comment">// float polyX[]   = horizontalcoordinates of corners</span></span><br><span class="line"><span class="comment">// float polyY[]   = verticalcoordinates of corners</span></span><br><span class="line"><span class="comment">// float x,y       = point to be tested</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// (Globals are used in this example for purposes of speed. Change as</span></span><br><span class="line"><span class="comment">// desired.)</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Thefunction will return YES if the point x,y is inside the polygon, or</span></span><br><span class="line"><span class="comment">// NOif it is not.  If the point is exactly on the edge of the polygon,</span></span><br><span class="line"><span class="comment">// then the function may return YES or NO.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Note that division by zero is avoided because the division is protected</span></span><br><span class="line"><span class="comment">// bythe "if" clause which surrounds it.</span></span><br><span class="line"></span><br><span class="line">bool pointInPolygon() &#123;</span><br><span class="line"></span><br><span class="line">    int i, j=polySides<span class="number">-1</span>;</span><br><span class="line">    bool oddNodes=NO;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (i=<span class="number">0</span>; i&lt;polySides; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> ((polyY[i]&lt; <span class="symbol">y</span> &amp;&amp; polyY[j]&gt;=<span class="symbol">y</span></span><br><span class="line">             || polyY[j]&lt;<span class="symbol">y</span> &amp;&amp; polyY[i]&gt;=<span class="symbol">y</span>)</span><br><span class="line">            &amp;&amp; (polyX[i]&lt;=<span class="symbol">x</span> || polyX[j]&lt;=<span class="symbol">x</span>)) &#123;</span><br><span class="line">            oddNodes^=(polyX[i]+(<span class="symbol">y</span>-polyY[i])/(polyY[j]-polyY[i])*(polyX[j]-polyX[i])&lt;<span class="symbol">x</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        j=i;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    returnoddNodes;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>整型问题</p>
+<p>假如你试图画一个像下图中蓝色的多边形，但是出来的却是有横线和竖线组成的边的多边形，如下图中的红色的多边形。出现这种情况可能是将多边形的顶点坐标变量定义成了整型而非浮点型，仔细地检查你的代码确保多边形的顶点是以浮点型定义且传递的。</p>
+<p><img src="http://of2ltm20e.bkt.clouddn.com/pointInThePolygon07.png" alt="图7"></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<li>这里用到的方法是引射线法，多边形描点一定要按照顺时针或者逆时针方向。</li>
+<li>射线和边的交点也就是射线和线段的交点，判断这条线段的两个端点是否在射线的两侧，在射线上或者上方认为是同一种情况，这样就能处理线段的端点在射线上和线段在射线上的情况了。</li>
+<li>我项目中用的是第二个算法，测试使用都没有问题，当然如果定位存在误差，这个是没办法解决的。</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/06/02/AutoLayout(cell%E8%87%AA%E9%80%82%E5%BA%94)/" rel="next" title="AutoLayout(cell自适应)">
+                <i class="fa fa-chevron-left"></i> AutoLayout(cell自适应)
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/10/29/CocoaPods%E5%AE%89%E8%A3%85/" rel="prev" title="CocoaPods安装">
+                CocoaPods安装 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/10/15/点在多边形内算法/"
+           data-title="点在多边形内算法" data-url="http://guaker.github.io/2016/10/15/%E7%82%B9%E5%9C%A8%E5%A4%9A%E8%BE%B9%E5%BD%A2%E5%86%85%E7%AE%97%E6%B3%95/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://of2ltm20e.bkt.clouddn.com/avatar.jpg"
+               alt="guaker" />
+          <p class="site-author-name" itemprop="name">guaker</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原文"><span class="nav-number">2.</span> <span class="nav-text">原文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">guaker</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="noopener">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"guaker"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

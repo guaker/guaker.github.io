@@ -1,0 +1,682 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="iOS 内存管理一直比较重要。引用计数、MRC、ARC 的概念不做阐述，这里整理下 iOS 内存管理的规则。 MRC 当调用 alloc、new、copy、mutableCopy 方法创建一个对象时，该对象的 retainCount 值为 1，当不再使用该对象时，需要调用 release 或 autorelease 方法。  当调用 retain 方法持有一个对象时，该对象的 retainCoun">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS内存管理">
+<meta property="og:url" content="http://guaker.github.io/2016/11/05/iOS%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/index.html">
+<meta property="og:site_name" content="guaker&#39;s blog">
+<meta property="og:description" content="iOS 内存管理一直比较重要。引用计数、MRC、ARC 的概念不做阐述，这里整理下 iOS 内存管理的规则。 MRC 当调用 alloc、new、copy、mutableCopy 方法创建一个对象时，该对象的 retainCount 值为 1，当不再使用该对象时，需要调用 release 或 autorelease 方法。  当调用 retain 方法持有一个对象时，该对象的 retainCoun">
+<meta property="article:published_time" content="2016-11-05T12:44:46.000Z">
+<meta property="article:modified_time" content="2016-11-23T02:49:43.000Z">
+<meta property="article:author" content="guaker">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://guaker.github.io/2016/11/05/iOS内存管理/"/>
+
+
+  <title> iOS内存管理 | guaker's blog </title>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">guaker's blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Write the code.Change the world.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                iOS内存管理
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-11-05T20:44:46+08:00" content="2016-11-05">
+              2016-11-05
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" itemprop="url" rel="index">
+                    <span itemprop="name">内存管理</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/11/05/iOS%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/05/iOS内存管理/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>iOS 内存管理一直比较重要。引用计数、MRC、ARC 的概念不做阐述，这里整理下 iOS 内存管理的规则。</p>
+<h3 id="MRC"><a href="#MRC" class="headerlink" title="MRC"></a>MRC</h3><ol>
+<li><p>当调用 <code>alloc</code>、<code>new</code>、<code>copy</code>、<code>mutableCopy</code> 方法创建一个对象时，该对象的 <code>retainCount</code> 值为 <code>1</code>，当不再使用该对象时，需要调用 <code>release</code> 或 <code>autorelease</code> 方法。</p>
+</li>
+<li><p>当调用 <code>retain</code> 方法持有一个对象时，该对象的 <code>retainCount</code> 值加 <code>1</code> ，当不再持有该对象时，需要调用 <code>release</code> 或 <code>autorelease</code> 方法。</p>
+</li>
+<li><p>当调用 <code>autorelease</code> 方法时，则把该对象添加到 <code>NSAutoreleasePool</code> 对象中。对于所有调用 <code>autorelease</code> 方法的对象，在 <code>NSAutoreleasePool</code> 对象释放时，都将调用 <code>release</code> 方法。</p>
+</li>
+<li><p>当调用 <code>release</code> 方法时，该对象的 <code>retainCount</code> 值减 <code>1</code>。</p>
+</li>
+<li><p>当 <code>retainCount</code> 值为 <code>0</code> 时，则自动调用 <code>dealloc</code> 方法，废弃对象。</p>
+</li>
+<li><p>对于非调用 <code>alloc</code>、<code>new</code>、<code>copy</code>、<code>mutableCopy</code> 方法创建一个对象时，则不需要手动管理内存。比如：<code>[NSArray array]</code> 创建的对象，则和下面代码是相同的。</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[NSArray alloc] init] autorelease]<span class="comment">;</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="ARC"><a href="#ARC" class="headerlink" title="ARC"></a>ARC</h3><p>ARC 也是使用的引用计数管理内存，本质上和 MRC 是一样的，只是由编译器自动管理引用计数。</p>
+<p>ARC 中使用所有权修饰符来修饰变量的，所有权修饰符一共有4种。</p>
+<figure class="highlight sqf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">__strong</span></span><br><span class="line"><span class="variable">__weak</span></span><br><span class="line"><span class="variable">__unsafe_unretained</span></span><br><span class="line"><span class="variable">__autoreleasing</span></span><br></pre></td></tr></table></figure>
+
+<p><code>__strong</code> 是强引用，是 <code>id</code> 类型和对象类型默认的所有权修饰符。</p>
+<p>附有 <code>__strong</code> 修饰符的变量在超出其变量作用域时，即在该变量被废弃时，会释放其被赋予的对象。</p>
+<p><code>__weak</code> 是弱引用，用 <code>__weak</code> 修饰的变量在创建对象后会被立即释放掉。</p>
+<h4 id="循环引用"><a href="#循环引用" class="headerlink" title="循环引用"></a>循环引用</h4><p>两个对象互相引用对方作为自己的成员变量，这两个对象的释放都在等对方的释放，这就造成了循环引用。</p>
+<p>这个时候我们就需要断开其中的一个强引用，用 <code>__weak</code> 修饰其中的一个对象，这样就能解决循环引用的问题。</p>
+<p>例如：<code>self</code> 中的成员变量在使用闭包，闭包中又会调用 <code>self</code> 时，这个时候为了避免循环引用，在闭包中使用 <code>self</code> 时需要用 <code>__weak</code> 修饰 <code>self</code>。</p>
+<p><code>__weak</code> 修饰符还有另一优点。在持有某对象的弱引用时，若该对象被废弃，则此弱引用将自动失效且处于 <code>nil</code> 被赋值的状态。</p>
+<p>在 <code>iOS 4</code> 中不能使用 <code>__weak</code>，可以用 <code>__unsafe_unretained</code> 修饰符，<code>__unsafe_unretained</code> 和 <code>__weak</code> 都是弱引用，但是使用 <code>__unsafe_unretained</code> 修饰的变量在被废弃时不会置 <code>nil</code>。</p>
+<p><code>__autoreleasing</code> 修饰的变量和 MRC 中调用 <code>autorelease</code> 一样。用 <code>@autoreleasepool</code> 块替代 <code>NSAutoreleasePool</code> 类，用附有 <code>__autoreleasing</code> 修饰符的变量替代 <code>autorelease</code> 方法。</p>
+<h3 id="Core-Foundation"><a href="#Core-Foundation" class="headerlink" title="Core Foundation"></a>Core Foundation</h3><p>ARC 下编译器不会自动管理 <code>Core Foundation</code> 对象内存。</p>
+<p><code>Core Foundation</code> 对象，大多数以 <code>XxxCreateWithXxx</code> 方式创建，当我们创建了一个 <code>Core Foundation</code> 对象以后就需要我们使用 <code>CFRelease</code> 手动释放。</p>
+<p><code>CFRetain</code>、<code>CFRelease</code> 和 MRC 中的<code>retain</code>、<code>release</code> 相同。</p>
+<p><code>Core Foundation</code> 对象和 <code>Objective-C</code> 对象转换，可以使用 <code>__bridge</code>、<code>__bridge_retained</code>、<code>__bridge_transfer</code>。</p>
+<p><code>__bridge_retained</code> 和 <code>CFBridgingRetain</code> 相同，<code>__bridge_transfer</code> 和 <code>CFBridgingRelease</code> 相同。</p>
+<ol>
+<li><p><code>__bridge</code>：<code>Core Foundation</code> 对象和 <code>Objective-C</code> 对象转化时，只涉及对象类型不涉及对象所有权的转化。</p>
+</li>
+<li><p><code>__bridge_retained</code>：常用在将 <code>Objective-C</code> 对象转换成 <code>Core Foundation</code> 对象时，将 <code>Objective-C</code> 对象的所有权交给 <code>Core Foundation</code> 对象来管理，这时需要使用 <code>CFRelease</code> 手动释放。</p>
+</li>
+<li><p><code>__bridge_transfer</code>：常用在将 <code>Core Foundation</code> 对象转换成 <code>Objective-C</code> 对象时，将 <code>Core Foundation</code> 对象的所有权交给 <code>Objective-C</code> 对象，这时 ARC 就能自动管理该内存。</p>
+</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/29/CocoaPods%E5%AE%89%E8%A3%85/" rel="next" title="CocoaPods安装">
+                <i class="fa fa-chevron-left"></i> CocoaPods安装
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/23/copy%E5%92%8CmutableCopy/" rel="prev" title="copy和mutableCopy">
+                copy和mutableCopy <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/11/05/iOS内存管理/"
+           data-title="iOS内存管理" data-url="http://guaker.github.io/2016/11/05/iOS%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://of2ltm20e.bkt.clouddn.com/avatar.jpg"
+               alt="guaker" />
+          <p class="site-author-name" itemprop="name">guaker</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#MRC"><span class="nav-number">1.</span> <span class="nav-text">MRC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ARC"><span class="nav-number">2.</span> <span class="nav-text">ARC</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#循环引用"><span class="nav-number">2.1.</span> <span class="nav-text">循环引用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Core-Foundation"><span class="nav-number">3.</span> <span class="nav-text">Core Foundation</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">guaker</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="noopener">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"guaker"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

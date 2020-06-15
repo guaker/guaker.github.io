@@ -1,0 +1,697 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="概述UIView是所有控件的父类，UIView的api则相对比较底层了，绘图，自动布局，动画。这章有点费劲，有些属性和方法自己以前用过，还有些是查资料加自己试的，尤其opaque这个属性，花了两个小时才弄明白。还有几个属性还不是很明白，等熟悉了之后再补充详细说明上去吧。欢迎大家指出错误以及不足。  绘图，比如图文混排，画个三角行。需要在子视图中重写，和coreText结合使用的。当时做的表情文字混">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UIView(UIViewRendering)">
+<meta property="og:url" content="http://guaker.github.io/2014/12/06/UIView(UIViewRendering)/index.html">
+<meta property="og:site_name" content="guaker&#39;s blog">
+<meta property="og:description" content="概述UIView是所有控件的父类，UIView的api则相对比较底层了，绘图，自动布局，动画。这章有点费劲，有些属性和方法自己以前用过，还有些是查资料加自己试的，尤其opaque这个属性，花了两个小时才弄明白。还有几个属性还不是很明白，等熟悉了之后再补充详细说明上去吧。欢迎大家指出错误以及不足。  绘图，比如图文混排，画个三角行。需要在子视图中重写，和coreText结合使用的。当时做的表情文字混">
+<meta property="article:published_time" content="2014-12-05T16:00:00.000Z">
+<meta property="article:modified_time" content="2016-10-16T08:43:44.000Z">
+<meta property="article:author" content="guaker">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://guaker.github.io/2014/12/06/UIView(UIViewRendering)/"/>
+
+
+  <title> UIView(UIViewRendering) | guaker's blog </title>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">guaker's blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Write the code.Change the world.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                UIView(UIViewRendering)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2014-12-06T00:00:00+08:00" content="2014-12-06">
+              2014-12-06
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/UIView/" itemprop="url" rel="index">
+                    <span itemprop="name">UIView</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2014/12/06/UIView(UIViewRendering)/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2014/12/06/UIView(UIViewRendering)/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p><code>UIView</code>是所有控件的父类，<code>UIView</code>的api则相对比较底层了，绘图，自动布局，动画。<br>这章有点费劲，有些属性和方法自己以前用过，还有些是查资料加自己试的，尤其<code>opaque</code>这个属性，花了两个小时才弄明白。还有几个属性还不是很明白，等熟悉了之后再补充详细说明上去吧。<br>欢迎大家指出错误以及不足。</p>
+<ol>
+<li><p>绘图，比如图文混排，画个三角行。<br>需要在子视图中重写，和<code>coreText</code>结合使用的。<br>当时做的表情文字混排重写了这个方法，虽然做过一遍但是仍只会个皮毛。</p>
+<pre><code>- (void)drawRect:(CGRect)rect;</code></pre></li>
+<li><p>显示<code>view</code>调用<code>setNeedsDisplay</code>或者<code>setNeedsDisplayInRect:</code>方法。<br><code>setNeedsDisplay</code>是更新整个<code>view</code>。<br><code>setNeedsDisplayInRect</code>是更新<code>view</code>的部分区域。</p>
+<pre><code>- (void)setNeedsDisplay;
+- (void)setNeedsDisplayInRect:(CGRect)rect;</code></pre></li>
+<li><p>修剪边界，默认是<code>NO</code>。<br>如果子视图的范围超出了父视图的边界，那么超出的部分就会被裁剪掉。这个属性在<a href="http://guaker.github.io/2015/03/02/UILabel-跑马灯/">UILabel-跑马灯</a>提到。</p>
+<pre><code>@property(nonatomic) BOOL clipsToBounds;</code></pre></li>
+<li><p>背景颜色，默认是<code>nil</code>。<br>后面有个<code>UI_APPEARANCE_SELECTOR</code>，从iOS5开始，苹果通过两个协议（<code>UIAppearance</code>和<code>UIAppearanceContainer</code>）规范了对许多<code>UIKit</code>控件定制的支持。所有遵循<code>UIAppearance</code>协议的UI控件通过定制都可以呈现各种外观。</p>
+<pre><code>@property(nonatomic,copy) UIColor *backgroundColor UI_APPEARANCE_SELECTOR;</code></pre></li>
+<li><p>透明度，值是<code>0</code>和<code>1.0</code>之间，默认是<code>1.0</code>不透明。<br>当把<code>alpha</code>的值设置成<code>0</code>以后：</p>
+</li>
+<li><p>当前<code>view</code>和<code>subview</code>都会被隐藏，而不管<code>subview</code>的<code>alpha</code>值为多少。</p>
+</li>
+<li><p>当前<code>view</code>会从响应者链中移除，而响应者链中的下一个会成为第一响应者。<br>默认是有动画效果的。</p>
+<pre><code>@property(nonatomic) CGFloat alpha;</code></pre></li>
+<li><p>不透明度，默认是<code>YES</code>不透明。<br>这个属性大家应该会很陌生，<code>opaque</code>属性是给绘图系统提供一个性能优化开关。<br>如果该值为<code>YES</code>，那么绘图在绘制该视图的时候把整个视图当作不透明对待。这样，绘图系统在执行绘图过程中会优化一些操作并提升系统性能；如果是设置为<code>NO</code>，绘图系统将其和其他内容平等对待，不去做优化操作。为了性能方面的考量，默认设置为<code>YES</code>。<br>如果<code>opaque</code>被设置成<code>YES</code>，而对应<code>view</code>的<code>alpha</code>属性不为<code>1.0</code>的时候，就会有不可预料的情况发生，这一点苹果在官方文档中有明确的说明。<br>因此，如果视图部分或全部支持透明，那么你必须把<code>opaque</code>这个值设置为<code>NO</code>。这点应该很多人都不知道，切记切记。<br>可以打开模拟器Debug下的Color Blended Layers，其中绿色代表不透明部分，红色代表透明部分。红色部分越多，对性能影响也越大，因为GPU需要对这些透明部分进行特殊处理。<br>解决Blended Layers问题也很简单，检查红色区域<code>view</code>的<code>opaque</code>属性，记得设置成<code>YES</code>；检查<code>backgroundColor</code>属性是不是<code>[UIColor clearColor]</code>。</p>
+<pre><code>@property(nonatomic,getter=isOpaque) BOOL opaque;</code></pre></li>
+<li><p>决定绘制前是否清屏，默认为<code>YES</code>。用于提高描画性能，特别是在可滚动的视图中。<br>当这个属性被设置为<code>YES</code>时，<code>UIKIt</code>会在调用<code>drawRect:</code>方法之前，把即将被该方法更新的区域填充为透明的黑色。<br>将这个属性设置为<code>NO</code>可以取消相应的填充操作，<code>view</code>中原有内容会保留。</p>
+<pre><code>@property(nonatomic) BOOL clearsContextBeforeDrawing;</code></pre></li>
+<li><p>是否隐藏，<code>NO</code>是显示，<code>YES</code>是隐藏，默认是<code>NO</code>。<br>当值设为<code>YES</code>时：</p>
+</li>
+<li><p>当前<code>view</code>和<code>subview</code>都会被隐藏，而不管<code>subview</code>的<code>hidden</code>值为多少。</p>
+</li>
+<li><p>当前<code>view</code>会从响应者链中移除，而响应者链中的下一个会成为第一响应者。</p>
+<pre><code>@property(nonatomic,getter=isHidden) BOOL hidden;</code></pre></li>
+<li><p>视图内容的填充方式。类型是<code>UIViewContentMode</code>。默认值是<code>UIViewContentModeScaleToFill</code>，填充到整个视图区域，不等比例拉伸。</p>
+<pre><code>@property(nonatomic) UIViewContentMode contentMode;
+typedef NS_ENUM(NSInteger, UIViewContentMode)  
+{
+    UIViewContentModeScaleToFill,     //填充到整个视图区域，不等比例拉伸。
+    UIViewContentModeScaleAspectFit,  //长宽等比填充视图区域，当某一个边到达视图边界的时候就不再拉伸，保证内容的长宽比是不变的同时尽可能的填充视图区域。
+    UIViewContentModeScaleAspectFill, //长宽等比填充视图区域，当某一个边到达视图边界的时候还继续拉伸，直到另一个方向达到视图边界。内容的长宽比不变的同时填满整个视图区域，不显示超过的部分。
+    UIViewContentModeRedraw,          //重绘视图边界
+    UIViewContentModeCenter,          //视图居中
+    UIViewContentModeTop,             //视图顶部对齐
+    UIViewContentModeBottom,          //视图底部对齐
+    UIViewContentModeLeft,            //视图左侧对齐
+    UIViewContentModeRight,           //视图右侧对齐
+    UIViewContentModeTopLeft,         //视图左上角对齐
+    UIViewContentModeTopRight,        //视图右上角对齐
+    UIViewContentModeBottomLeft,      //视图左下角对齐
+    UIViewContentModeBottomRight,     //视图右下角对齐
+};</code></pre><p>注意以上几个常量，凡是没有带<code>Scale</code>的，当图片尺寸超过<code>imageView</code>尺寸时，只有部分显示在<code>imageView</code>中。<code>UIViewContentModeScaleToFill</code>属性会导致图片变形。<code>UIViewContentModeScaleAspectFit</code>会保证图片比例不变，而且全部显示在<code>imageView</code>中，这意味着<code>imageView</code>会有部分空白。<code>UIViewContentModeScaleAspectFill</code>也会证图片比例不变，但是是填充整个<code>imageView</code>的，可能只有部分图片显示出来。</p>
+</li>
+<li><p>视图拉伸区域，默认是<code>{{0,0} {1,1}}</code>。现在弃用：请用<code>-(UIImage resizableImageWithCapInsets:]</code>来实现同样的效果。<br>你可以用<code>contentStretch</code>属性来定义一个视图的可拉伸区域。这个属性的值一个边的值被标准化为<code>0.0</code>到<code>1.0</code>之间的矩形。当拉伸这个视图时，系统将视图的当前边界值和放缩因子乘以标准值，以便决定哪些像素需要被拉伸。使用标准值可以减轻每次改变视图的边界值都更新<code>contentStretch</code>属性的需要。</p>
+<pre><code>@property(nonatomic) CGRect contentStretch NS_DEPRECATED_IOS(3_0,6_0);</code></pre></li>
+<li><p>这个是和自动布局相关的，具体使用等我弄明白之后补充上来。</p>
+<pre><code>@property(nonatomic,retain) UIView *maskView NS_AVAILABLE_IOS(8_0);</code></pre></li>
+<li><p>色调颜色，开始用于iOS7。<br><code>tintColor</code>是用来在视觉上说明屏幕上哪些控件是活跃的或者有相关的活动。例如<code>barButtonItems</code>和<code>tabBarItems</code>默认使用<code>tintColor</code>。<br>如果一个<code>view</code>没有显示地指定<code>tintColor</code>，它将继承父视图的<code>tintColor</code>，因此在整个视图层次结构中将有一个连锁反应。<br>最简单的情况是你可以通过一行代码来给整个app指定一个颜色主题:</p>
+<pre><code>[[UIApplication sharedApplication] keyWindow].tintColor = [UIColor orangeColor];</code></pre><p>因为<code>UIWindow</code>继承自<code>UIView</code>，所以我们可以指定一个<code>tintColor</code>，然后应用内的所有子视图将继承这个颜色。<br><code>UINavigationBar</code>设置<code>tintColor</code>为白色，则按钮的颜色就是白色，但是背景色不是白色。</p>
+<pre><code>@property(nonatomic,retain) UIColor *tintColor NS_AVAILABLE_IOS(7_0);       </code></pre></li>
+<li><p>色调模型，可以和<code>tintColor</code>结合着使用。</p>
+<pre><code>@property(nonatomic) UIViewTintAdjustmentMode tintAdjustmentMode NS_AVAILABLE_IOS(7_0);</code></pre></li>
+<li><p>更新视图的渲染。</p>
+<pre><code>- (void)tintColorDidChange NS_AVAILABLE_IOS(7_0);</code></pre></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2014/12/02/UIView(%E8%BE%B9%E6%A1%86%E5%92%8C%E5%BC%A7%E5%BA%A6)/" rel="next" title="UIView(边框和弧度)">
+                <i class="fa fa-chevron-left"></i> UIView(边框和弧度)
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2014/12/13/UIView(UIViewHierarchy)/" rel="prev" title="UIView(UIViewHierarchy)">
+                UIView(UIViewHierarchy) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2014/12/06/UIView(UIViewRendering)/"
+           data-title="UIView(UIViewRendering)" data-url="http://guaker.github.io/2014/12/06/UIView(UIViewRendering)/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://of2ltm20e.bkt.clouddn.com/avatar.jpg"
+               alt="guaker" />
+          <p class="site-author-name" itemprop="name">guaker</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">guaker</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="noopener">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"guaker"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

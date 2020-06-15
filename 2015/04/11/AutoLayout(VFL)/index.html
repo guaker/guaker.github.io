@@ -1,0 +1,704 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="NSLayoutConstraint的第二个类方法    + (NSArray *)constraintsWithVisualFormat:(NSString *)format                                     options:(NSLayoutFormatOptions)opts                                     met">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AutoLayout(VFL)">
+<meta property="og:url" content="http://guaker.github.io/2015/04/11/AutoLayout(VFL)/index.html">
+<meta property="og:site_name" content="guaker&#39;s blog">
+<meta property="og:description" content="NSLayoutConstraint的第二个类方法    + (NSArray *)constraintsWithVisualFormat:(NSString *)format                                     options:(NSLayoutFormatOptions)opts                                     met">
+<meta property="og:image" content="http://of2ltm20e.bkt.clouddn.com/262538-a01f5e7ae4eff6a0.png">
+<meta property="article:published_time" content="2015-04-10T16:00:00.000Z">
+<meta property="article:modified_time" content="2016-10-16T11:54:26.000Z">
+<meta property="article:author" content="guaker">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://of2ltm20e.bkt.clouddn.com/262538-a01f5e7ae4eff6a0.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://guaker.github.io/2015/04/11/AutoLayout(VFL)/"/>
+
+
+  <title> AutoLayout(VFL) | guaker's blog </title>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">guaker's blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Write the code.Change the world.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                AutoLayout(VFL)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-04-11T00:00:00+08:00" content="2015-04-11">
+              2015-04-11
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/AutoLayout/" itemprop="url" rel="index">
+                    <span itemprop="name">AutoLayout</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/04/11/AutoLayout(VFL)/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/04/11/AutoLayout(VFL)/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><code>NSLayoutConstraint</code>的第二个类方法<br>    + (NSArray *)constraintsWithVisualFormat:(NSString *)format<br>                                     options:(NSLayoutFormatOptions)opts<br>                                     metrics:(NSDictionary *)metrics<br>                                       views:(NSDictionary *)views;</p>
+<ul>
+<li>其中<code>format</code>就是<code>VFL</code>字符串，比如<code>@&quot;H:|-10-[view]-20-|&quot;</code>，一会详细说明。</li>
+<li><code>opts</code>是枚举参数，默认是<code>0</code>。<pre><code>typedef NS_OPTIONS(NSUInteger, NSLayoutFormatOptions) {
+    NSLayoutFormatAlignAllLeft = (1 &lt;&lt; NSLayoutAttributeLeft),
+    NSLayoutFormatAlignAllRight = (1 &lt;&lt; NSLayoutAttributeRight),
+    NSLayoutFormatAlignAllTop = (1 &lt;&lt; NSLayoutAttributeTop),
+    NSLayoutFormatAlignAllBottom = (1 &lt;&lt; NSLayoutAttributeBottom),
+    NSLayoutFormatAlignAllLeading = (1 &lt;&lt; NSLayoutAttributeLeading),
+    NSLayoutFormatAlignAllTrailing = (1 &lt;&lt; NSLayoutAttributeTrailing),
+    NSLayoutFormatAlignAllCenterX = (1 &lt;&lt; NSLayoutAttributeCenterX),
+    NSLayoutFormatAlignAllCenterY = (1 &lt;&lt; NSLayoutAttributeCenterY),
+    NSLayoutFormatAlignAllBaseline = (1 &lt;&lt; NSLayoutAttributeBaseline),
+    NSLayoutFormatAlignAllLastBaseline = NSLayoutFormatAlignAllBaseline,
+    NSLayoutFormatAlignAllFirstBaseline NS_ENUM_AVAILABLE_IOS(8_0) = (1 &lt;&lt; NSLayoutAttributeFirstBaseline),
+    NSLayoutFormatAlignmentMask = 0xFFFF,
+    /* choose only one of these three
+     */
+    NSLayoutFormatDirectionLeadingToTrailing = 0 &lt;&lt; 16, // default
+    NSLayoutFormatDirectionLeftToRight = 1 &lt;&lt; 16,
+    NSLayoutFormatDirectionRightToLeft = 2 &lt;&lt; 16,  
+    NSLayoutFormatDirectionMask = 0x3 &lt;&lt; 16,  
+};</code></pre></li>
+<li><code>metrics</code>是自定义的一个字典，这个字典里面的<code>key</code>可以写在<code>format</code>字串中。编译器解析时，自动替换为<code>metrics</code>字典中的<code>value</code>。比如：<pre><code>NSDictionary * metrics = @{@&quot;left&quot;:@5,@&quot;right&quot;:@5,@&quot;height&quot;:@150.0};   
+NSString * format = @&quot;|-left-[view]-right-|&quot;;</code></pre>这个一看就明白的，不用这个，设置为<code>nil</code>。</li>
+<li><code>views</code>是设置约束所有<code>view</code>的字典。比如：<pre><code>NSDictionary *viewsDictionary = NSDictionaryOfVariableBindings(view);</code></pre>这个宏的作用是把<code>view</code>映射成字典<code>[NSDictionary dictionaryWithObjectsAndKeys:view, @&quot;view&quot;, nil]</code>;</li>
+</ul>
+<h3 id="VFL"><a href="#VFL" class="headerlink" title="VFL"></a>VFL</h3><p>苹果开发团队可能觉得添加单个<code>constraint</code>的API比较长，于是就有了<code>VFL（Visual format language）</code>。<br>上面提到的<code>@&quot;H:|-10-[view]-20-|&quot;</code>，意思就是<code>view</code>距离<code>superview</code>的左边<code>10</code>点，右边<code>20</code>点，这样是不是就可以确定了这个<code>view</code>的宽度了？<br>其中<code>H:</code>表示横向，<code>|</code>表示父视图边缘，<code>-10-</code>表示<code>10</code>点距离，<code>[view]</code>表示子视图。<br>下面详细说明，参考：<a href="http://blog.csdn.net/a1152024140/article/details/40823883" target="_blank" rel="noopener">AutoLayout详解+手把手实战</a><br><code>V:</code>表示纵向<br><code>H:</code>表示横向<br><code>|</code>表示父视图边缘<br><code>-</code>表示距离<br><code>&gt;=</code>表示视图间距、宽度或高度必须大于或等于某个值<br><code>&lt;=</code>表示视图间距、宽度或高度必须小宇或等于某个值<br><code>==</code>表示视图间距、宽度或高度必须等于某个值<br><code>@</code>表示<code>&gt;=</code>、<code>&lt;=</code>、<code>==</code>限制，最大为<code>1000</code></p>
+<p>示例：</p>
+<blockquote>
+<ol>
+<li><code>|-[view]-|</code>视图处在父视图的左右边缘内</li>
+<li><code>|-[view]</code>视图处在父视图的左边缘</li>
+<li><code>|[view]</code>视图和父视图左边对齐</li>
+<li><code>-[view]-</code>设置视图的宽度高度</li>
+<li><code>|-30.0-[view]-30.0-|</code>表示离父视图 左右间距<code>30</code></li>
+<li><code>[view(200.0)]</code>表示视图宽度为<code>200.0</code></li>
+<li><code>|-[view(view1)]-[view1]-|</code>表示视图宽度一样，并且在父视图左右边缘内</li>
+<li><code>V:|-[view(50.0)]</code>视图高度为<code>50</code></li>
+<li><code>V:|-(==padding)-[imageView]-&gt;=0-[button]-(==padding)-|</code>表示离父视图的距离<br>为<code>Padding</code>,这两个视图间距必须大于或等于<code>0</code>并且距离底部父视图为<code>padding</code>。</li>
+<li><code>[wideView(&gt;=60@700)]</code>视图的宽度为至少为<code>60</code>不能超过  <code>700</code></li>
+<li>如果没有声明方向默认为水平<code>H:</code>（原文写的<code>V:</code>）</li>
+</ol>
+</blockquote>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><pre><code>UIView *view = [[UIView alloc] init];
+view.backgroundColor = [UIColor brownColor];
+view.translatesAutoresizingMaskIntoConstraints = NO;
+[self.view addSubview:view];
+
+//通过宏映射成[NSDictionary dictionaryWithObjectsAndKeys:v1, @&quot;v1&quot;, v2, @&quot;v2&quot;, nil];
+NSDictionary *viewsDictionary = NSDictionaryOfVariableBindings(view);
+//约束1 横向
+[self.view addConstraints:
+ [NSLayoutConstraint constraintsWithVisualFormat:@&quot;H:|-10-[view]-20-|&quot;
+                                         options:0
+                                         metrics:nil
+                                           views:viewsDictionary]];
+//约束2 纵向
+[self.view addConstraints:
+ [NSLayoutConstraint constraintsWithVisualFormat:@&quot;V:|-100-[view]-200-|&quot;
+                                         options:0
+                                         metrics:nil
+                                           views:viewsDictionary]];</code></pre><p>效果图<br><img src="http://of2ltm20e.bkt.clouddn.com/262538-a01f5e7ae4eff6a0.png" alt="VFL"><br>持续更新，项目中适配遇到的问题就写出来，下篇介绍<code>scrollView</code>使用<code>autoLayout</code>。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/04/04/AutoLayout(NSLayoutConstraint)/" rel="next" title="AutoLayout(NSLayoutConstraint)">
+                <i class="fa fa-chevron-left"></i> AutoLayout(NSLayoutConstraint)
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/04/19/AutoLayout(UIScrollView)/" rel="prev" title="AutoLayout(UIScrollView)">
+                AutoLayout(UIScrollView) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2015/04/11/AutoLayout(VFL)/"
+           data-title="AutoLayout(VFL)" data-url="http://guaker.github.io/2015/04/11/AutoLayout(VFL)/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://of2ltm20e.bkt.clouddn.com/avatar.jpg"
+               alt="guaker" />
+          <p class="site-author-name" itemprop="name">guaker</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#VFL"><span class="nav-number">1.</span> <span class="nav-text">VFL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码"><span class="nav-number">2.</span> <span class="nav-text">代码</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">guaker</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="noopener">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"guaker"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

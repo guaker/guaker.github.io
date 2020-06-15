@@ -1,0 +1,656 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="加急审核本是针对已经上线的app，对于已经上线的app如果发生账号安全漏洞，支付安全，闪退，等比较严重的问题，苹果为开发者提供了加急这个选择（试想，如果按照正常的审核流程10天左右，对于账号出现漏洞的app简直就是灾难）；一般当你申请加急之后，当天会进入in review状态，两天之内出结果；当然你申请的理由，也会是苹果考虑的因素。  周五晚上（1月31日）发布了1.0.3版本，周日早上（2月8">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS加急审核">
+<meta property="og:url" content="http://guaker.github.io/2015/03/01/iOS%E5%8A%A0%E6%80%A5%E5%AE%A1%E6%A0%B8/index.html">
+<meta property="og:site_name" content="guaker&#39;s blog">
+<meta property="og:description" content="加急审核本是针对已经上线的app，对于已经上线的app如果发生账号安全漏洞，支付安全，闪退，等比较严重的问题，苹果为开发者提供了加急这个选择（试想，如果按照正常的审核流程10天左右，对于账号出现漏洞的app简直就是灾难）；一般当你申请加急之后，当天会进入in review状态，两天之内出结果；当然你申请的理由，也会是苹果考虑的因素。  周五晚上（1月31日）发布了1.0.3版本，周日早上（2月8">
+<meta property="og:image" content="http://of2ltm20e.bkt.clouddn.com/262538-215fa2c24d7c24df.jpeg">
+<meta property="og:image" content="http://of2ltm20e.bkt.clouddn.com/262538-e0a3a19402afda74.jpeg">
+<meta property="og:image" content="http://of2ltm20e.bkt.clouddn.com/262538-30f279b7543d9930.jpeg">
+<meta property="og:image" content="http://of2ltm20e.bkt.clouddn.com/262538-07206ea5c5917862.jpeg">
+<meta property="og:image" content="http://of2ltm20e.bkt.clouddn.com/262538-d82946824174c1b4.jpeg">
+<meta property="article:published_time" content="2015-02-28T16:00:00.000Z">
+<meta property="article:modified_time" content="2016-10-16T11:56:26.000Z">
+<meta property="article:author" content="guaker">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://of2ltm20e.bkt.clouddn.com/262538-215fa2c24d7c24df.jpeg">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://guaker.github.io/2015/03/01/iOS加急审核/"/>
+
+
+  <title> iOS加急审核 | guaker's blog </title>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">guaker's blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Write the code.Change the world.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                iOS加急审核
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-03-01T00:00:00+08:00" content="2015-03-01">
+              2015-03-01
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/%E5%BC%80%E5%8F%91%E8%80%85%E8%B4%A6%E5%8F%B7/" itemprop="url" rel="index">
+                    <span itemprop="name">开发者账号</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/03/01/iOS%E5%8A%A0%E6%80%A5%E5%AE%A1%E6%A0%B8/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/03/01/iOS加急审核/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>加急审核本是针对已经上线的app，对于已经上线的app如果发生账号安全漏洞，支付安全，闪退，等比较严重的问题，苹果为开发者提供了加急这个选择（试想，如果按照正常的审核流程10天左右，对于账号出现漏洞的app简直就是灾难）；一般当你申请加急之后，当天会进入<code>in review</code>状态，两天之内出结果；当然你申请的理由，也会是苹果考虑的因素。</p>
+</blockquote>
+<p>周五晚上（1月31日）发布了1.0.3版本，周日早上（2月8日）审核通过并且上线App Store，这是正常流程，是8天左右的审核时间。<br>周一（2月9日）编辑部发现一个bug，搜索页面搜索商品都不显示数据，这是个重大bug，周一晚上10点多发布了1.0.4版本，并且用了一次加急审核，周二早上（2月10日）4点多就出结果了，不过是被拒绝了。<br>我7点多起来的时候赶紧看了下被拒原因，元数据被拒绝，说我们app里面有酒，但是评级不对，改了评级又提交了一次，当天下午6点<code>in Review</code>，周三早上1点（2月11日）审核通过并且上线App Store。<br><img src="http://of2ltm20e.bkt.clouddn.com/262538-215fa2c24d7c24df.jpeg" alt="审核状态"><br>我目前使用过加急4次，成功3次。切记，请勿滥用！<br>使用加急审核需要先提交版本，然后在<a href="https://developer.apple.com/contact/app-store/?topic=expedite" target="_blank" rel="noopener">加急审核页面</a>提交你的app信息。</p>
+<ul>
+<li>第一步：<br>选择请求一个加速应用程序审查。<br><img src="http://of2ltm20e.bkt.clouddn.com/262538-e0a3a19402afda74.jpeg" alt="选择类别"></li>
+<li>第二步：<br>你的手机号，需要添加国家区号中国是+86，貌似0也可以，不过这个号码不是最重要的，我是写的0，苹果一般不会打给你的。<br>第二个是组织机构，你的公司的名称，选填。<br><img src="http://of2ltm20e.bkt.clouddn.com/262538-30f279b7543d9930.jpeg" alt="公司信息"></li>
+<li>第三步：<br>你app的名字。<br>Apple ID。<br>第三个如果有多个app的时候需要填写，选填。<br>第四个选择App Store。<br><img src="http://of2ltm20e.bkt.clouddn.com/262538-07206ea5c5917862.jpeg" alt="app信息"></li>
+<li>第四步：<br>选择一个原因，一般都是选的重大bug。<br>理由一定要充分，这个关系到你能不能加急通过，貌似必须要英文，中文还真没试过。<br>我这次是这样写的：<br>We found an error on the login page of our app. It led to failure to enter the home page and brought terrible user experience. Thus,  we corrected it in our new version. To improve the user experience of our app, we need an urgent approval. Thanks for your help!<br>最后点send按钮。<br><img src="http://of2ltm20e.bkt.clouddn.com/262538-d82946824174c1b4.jpeg" alt="加急理由"></li>
+</ul>
+<p>元数据被拒绝，一般这个问题只需要改下iTunes Connect信息，然后提交就可以，不需要重新打包发布，这个原因被拒重新提交审核也快，一天左右。<br>######补充<br>前几天在群里聊审核时间的事，群里大神说，超过1kw用户的都有app审核专员，主动联系就有了。这样审核会很快。<br>######2016.01.18补充<br>Apple会在12月22日至12月29日休假，这段时间无法提交app，29日提交的app会很多，申请加急的也会很多，所以这个时候加急基本不会成功，而且审核的时间也会变长，9天左右。<br>1月15日提交了3.1.0版本，1月17日早上5点申请了加急审核，上午9点就给审核通过。这次只用了4个小时，填写加急的理由是用的中文。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/02/11/%E5%BC%80%E5%8F%91%E8%80%85%E8%B4%A6%E5%8F%B7%E5%92%8C.ipa%E6%96%87%E4%BB%B6%E9%87%8D%E6%96%B0%E7%AD%BE%E5%90%8D/" rel="next" title="开发者账号和.ipa文件重新签名">
+                <i class="fa fa-chevron-left"></i> 开发者账号和.ipa文件重新签名
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/03/11/app%E5%9B%BE%E6%A0%87%E5%92%8C%E5%90%AF%E5%8A%A8%E5%9B%BE%E4%BB%A5%E5%8F%8AImages-xcassets/" rel="prev" title="app图标和启动图以及Images-xcassets">
+                app图标和启动图以及Images-xcassets <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2015/03/01/iOS加急审核/"
+           data-title="iOS加急审核" data-url="http://guaker.github.io/2015/03/01/iOS%E5%8A%A0%E6%80%A5%E5%AE%A1%E6%A0%B8/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://of2ltm20e.bkt.clouddn.com/avatar.jpg"
+               alt="guaker" />
+          <p class="site-author-name" itemprop="name">guaker</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <p class="post-toc-empty">此文章未包含目录</p>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">guaker</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="noopener">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"guaker"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
